@@ -166,6 +166,26 @@ def delete_music(music_id):
 
 
 # Playlist
+@app.route('/api/playlist', methods=['GET'])
+@login_required
+def view_playlist():
+    # Pegando o Usuario
+    user = User.query.get(int(current_user.id))
+    playlist_items = user.playlist # MT EASY DE RECUPERAR AS MÚSICAS!!!
+    playlist_content = []
+    for playlist_item in playlist_items:
+        music = Music.query.get(playlist_item.music_id) # Para retornar o nome, tempo e artista das músicas
+        playlist_content.append({
+                                "id": playlist_item.id,
+                                #"user_id": playlist_item.user_id,
+                                #"music_id": playlist_item.product_id,
+                                "music_name": music.name,
+                                "music_artist": music.artist,
+                                "music_time": music.time,
+                            })
+    return jsonify(playlist_content)
+
+
 @app.route('/api/playlist/add/<int:music_id>', methods=['POST'])
 @login_required
 def add_to_playlist(music_id):
