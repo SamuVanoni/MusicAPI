@@ -114,6 +114,7 @@ def get_music_details(music_id):
 
 
 @app.route('/api/musics/add', methods=["POST"])
+@login_required
 def add_music():
     data = request.json
     if 'name' in data and 'artist' in data and 'time' in data:
@@ -125,6 +126,7 @@ def add_music():
 
 
 @app.route('/api/musics/update/<int:music_id>', methods=["PUT"])
+@login_required
 def update_music(music_id):
     music = Music.query.get(music_id)
     if not music:
@@ -148,6 +150,7 @@ def update_music(music_id):
 
 
 @app.route('/api/musics/delete/<int:music_id>', methods=["DELETE"])
+@login_required
 def delete_music(music_id):
     music = Music.query.get(music_id)
     if music:
