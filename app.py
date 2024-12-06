@@ -165,6 +165,23 @@ def delete_music(music_id):
     return jsonify({"message": "Music not found"}), 404
 
 
+# Playlist
+@app.route('/api/playlist/add/<int:music_id>', methods=['POST'])
+@login_required
+def add_to_playlist(music_id):
+    # Pegando o Usuario
+    user = User.query.get(int(current_user.id))
+    # Pegando a Música
+    music = Music.query.get(music_id)
+
+    if user and music:
+        playlist_item = Playlist(user_id=user.id, music_id=music.id) # Criando o CartItem (instanciando)
+        db.session.add(playlist_item) # Add no carrinho do cliente
+        db.session.commit() # Finalizando
+        return jsonify({'message': 'Item added to the playlist successfully'})
+    return jsonify({'message': 'Failed to add item to the playlist'}), 400
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World'
