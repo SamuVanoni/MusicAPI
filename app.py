@@ -32,6 +32,11 @@ class Music(db.Model):
     time = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
 
+class Playlist(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # FK do userId
+    music_id = db.Column(db.Integer, db.ForeignKey('music.id'), nullable=False)
+
 
 # Autenticacao
 @login_manager.user_loader # Recupera o usuário que vai acessar a rota
