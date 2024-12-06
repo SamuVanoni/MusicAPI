@@ -214,6 +214,17 @@ def remove_from_playlist(music_id):
     return jsonify({'message': 'Failed to remove music from the playlist'}), 400
 
 
+@app.route('/api/playlist/delete', methods=["POST"])
+@login_required
+def delete_playlist():
+    user = User.query.get(int(current_user.id))
+    playlist_items = user.playlist
+    for playlist_item in playlist_items:
+        db.session.delete(playlist_item)
+    db.session.commit()
+    return jsonify({'message': 'Deleted playslist successful'})
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World'
