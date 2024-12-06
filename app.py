@@ -50,7 +50,6 @@ def get_music_details(music_id):
 
 
 @app.route('/api/musics/add', methods=["POST"])
-@login_required
 def add_music():
     data = request.json
     if 'name' in data and 'artist' in data and 'time' in data:
@@ -59,6 +58,29 @@ def add_music():
         db.session.commit()
         return jsonify({"message": "Music added successfully"})
     return jsonify({"message": "Invalid music data"})
+
+
+@app.route('/api/musics/update/<int:music_id>', methods=["PUT"])
+def update_music(music_id):
+    music = Music.query.get(music_id)
+    if not music:
+        return jsonify({"message": "Music not found"}), 404
+    
+    data = request.json
+    if 'name' in data:
+        music.name = data['name']
+    
+    if 'artist' in data:
+        music.artist = data['artist']
+
+    if 'time' in data:
+        music.time = data['time']
+
+    if 'description' in data:
+        music.description = data['description']
+    
+    db.session.commit()
+    return jsonify({'message': 'Music updated successfully'})
 
 
 @app.route('/')
