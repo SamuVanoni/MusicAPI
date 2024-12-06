@@ -58,6 +58,19 @@ def delete_user(user_id):
     return jsonify({"message": "User not found"}), 404
 
 
+@app.route('/login', methods=["POST"])
+def login():
+    data = request.json
+    # filter_by -> fazer busca sem ser pela PK (id)
+    user = User.query.filter_by(username=data.get("username")).first()
+    # Retornaria uma lista, o .first() é utilizado p pegar somente o 1°
+
+    if user and data.get("password") == user.password:
+        login_user(user)
+        return jsonify({"message": "Logged in successfully"})
+    return jsonify({"message": "Unauthorized. Invalid credentials"}), 401
+
+
 # Rotas Musics
 @app.route('/api/musics', methods=["GET"])
 def get_musics():
