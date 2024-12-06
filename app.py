@@ -34,6 +34,11 @@ class Music(db.Model):
 
 
 # Autenticacao
+@login_manager.user_loader # Recupera o usuário que vai acessar a rota
+def load_user(user_id): # Quem chama ele é o login_required
+    return User.query.get(int(user_id))
+
+
 @app.route('/create_user', methods=["POST"])
 def create_user():
     data = request.json
