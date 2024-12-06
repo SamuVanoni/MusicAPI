@@ -33,6 +33,18 @@ class Music(db.Model):
     description = db.Column(db.Text, nullable=True)
 
 
+# Autenticacao
+@app.route('/create_user', methods=["POST"])
+def create_user():
+    data = request.json
+    if 'username' in data and 'password' in data:
+        user = User(username=data["username"], password=data["password"])
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({"message": "User added successfully"})
+    return jsonify({"message": "Invalid user data"})
+
+
 # Rotas Musics
 @app.route('/api/musics', methods=["GET"])
 def get_musics():
