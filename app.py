@@ -20,6 +20,21 @@ class Music(db.Model):
 
 
 # Rotas Musics
+@app.route('/api/musics', methods=["GET"])
+def get_musics():
+    musics = Music.query.all()
+    music_list = []
+    for music in musics:
+        music_data = {
+            "id": music.id,
+            "name": music.name,
+            "artist": music.artist,
+            "time": music.time,
+        }
+        music_list.append(music_data)
+    return jsonify(music_list)
+
+
 @app.route('/api/musics/add', methods=["POST"])
 @login_required
 def add_music():
