@@ -10,12 +10,27 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
 db = SQLAlchemy(app)
 
+
 class Music(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     artist = db.Column(db.String(120), nullable=False)
     time = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
+
+
+# Rotas Musics
+@app.route('/api/musics/add', methods=["POST"])
+@login_required
+def add_music():
+    data = request.json
+    if 'name' in data and 'artist' in data and 'time' in data:
+        music = Music(name=data["name"], artist=data["artist"], time=data["time"], description=data.get("description", ""))
+        db.session.add(music)
+        db.session.commit()
+        return jsonify({"message": "Music added successfully"})
+    return jsonify({"message": "Invalid music data"})
+
 
 @app.route('/')
 def hello_world():
