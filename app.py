@@ -202,6 +202,18 @@ def add_to_playlist(music_id):
     return jsonify({'message': 'Failed to add item to the playlist'}), 400
 
 
+@app.route('/api/playlist/remove/<int:music_id>', methods=['DELETE'])
+@login_required
+def remove_from_playlist(music_id):
+    # Buscamos o item da playlist que tem o current_user.id e a music que está pedindo para remover
+    music_item = Playlist.query.filter_by(user_id=current_user.id, music_id=music_id).first()
+    if music_item:
+        db.session.delete(music_item)
+        db.session.commit()
+        return jsonify({'message': 'Music removed from the playlist successfully'})
+    return jsonify({'message': 'Failed to remove music from the playlist'}), 400
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World'
