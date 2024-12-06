@@ -5,11 +5,25 @@ from flask_login import UserMixin, login_user, logout_user, LoginManager, login_
 from dotenv import load_dotenv
 import os
 
+load_dotenv()
+
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
 
+login_manager = LoginManager()
 db = SQLAlchemy(app)
+login_manager.init_app(app)
+login_manager.login_view = 'login' # Rota que iremos autenticar o usuário
+CORS(app)
 
+
+class User(db.Model, UserMixin): # UserMixin utilizado para realizar o Login
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=True)
+    # lazy=True => Só vai recuperar a playlist quando vc tentar acessar essa info
+    playlist = db.relationship('Playlist', backref='user', lazy=True) # Recuperação da playlist do usuário
 
 class Music(db.Model):
     id = db.Column(db.Integer, primary_key=True)
