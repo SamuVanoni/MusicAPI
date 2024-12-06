@@ -6,6 +6,16 @@ from dotenv import load_dotenv
 import os
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
+
+db = SQLAlchemy(app)
+
+class Music(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120), nullable=False)
+    artist = db.Column(db.String(120), nullable=False)
+    time = db.Column(db.Float, nullable=False)
+    description = db.Column(db.Text, nullable=True)
 
 @app.route('/')
 def hello_world():
