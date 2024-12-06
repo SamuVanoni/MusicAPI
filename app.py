@@ -118,6 +118,23 @@ def get_music_details(music_id):
     return jsonify({"message": "Music not found"}), 404
 
 
+@app.route('/api/musics/search', methods=["GET"])
+def get_music_by_name():
+    music_name = request.args.get('q', '')
+    musics = Music.query.all()
+    music_list = []
+    for music in musics:
+        if music_name.lower() in music.name.lower():
+            music_data = {
+                "id": music.id,
+                "name": music.name,
+                "artist": music.artist,
+                "time": music.time,
+            }
+            music_list.append(music_data)
+    return jsonify(music_list)
+
+
 @app.route('/api/musics/add', methods=["POST"])
 @login_required
 def add_music():
