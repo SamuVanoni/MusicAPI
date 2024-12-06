@@ -83,6 +83,16 @@ def update_music(music_id):
     return jsonify({'message': 'Music updated successfully'})
 
 
+@app.route('/api/musics/delete/<int:music_id>', methods=["DELETE"])
+def delete_music(music_id):
+    music = Music.query.get(music_id)
+    if music:
+        db.session.delete(music)
+        db.session.commit()
+        return jsonify({"message": "Music deleted successfully"})
+    return jsonify({"message": "Music not found"}), 404
+
+
 @app.route('/')
 def hello_world():
     return 'Hello World'
