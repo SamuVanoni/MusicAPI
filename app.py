@@ -71,6 +71,13 @@ def login():
     return jsonify({"message": "Unauthorized. Invalid credentials"}), 401
 
 
+@app.route('/logout', methods=["POST"])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({"message": "Logout successfully"})
+
+
 # Rotas Musics
 @app.route('/api/musics', methods=["GET"])
 def get_musics():
