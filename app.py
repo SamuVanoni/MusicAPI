@@ -45,6 +45,19 @@ def create_user():
     return jsonify({"message": "Invalid user data"})
 
 
+@app.route('/delete_user/<int:user_id>', methods=["DELETE"])
+def delete_user(user_id):
+    user = User.query.get(user_id)
+    if user:
+        playlist_items = user.playlist
+        for playlist_item in playlist_items: # Excluindo a playlist do usuário
+            db.session.delete(playlist_item)
+        db.session.delete(user) # Excluindo o usuário
+        db.session.commit()
+        return jsonify({"message": "User deleted successfully"})
+    return jsonify({"message": "User not found"}), 404
+
+
 # Rotas Musics
 @app.route('/api/musics', methods=["GET"])
 def get_musics():
